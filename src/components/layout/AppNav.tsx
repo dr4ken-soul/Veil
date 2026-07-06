@@ -1,7 +1,5 @@
 import { useLocation, Link } from 'react-router-dom'
-import { useAccount, useConnect, useDisconnect } from 'wagmi'
-import { injected } from 'wagmi/connectors'
-import { truncateAddress } from '../../lib/utils'
+import { WalletDropdown } from '../ui/WalletDropdown'
 
 /**
  * App interior navigation bar.
@@ -14,9 +12,6 @@ import { truncateAddress } from '../../lib/utils'
 export function AppNav() {
   const location = useLocation()
   const path = location.pathname
-  const { address, isConnected } = useAccount()
-  const { connect } = useConnect()
-  const { disconnect } = useDisconnect()
 
   // Define tab navigation based on active route to center the active page name
   let leftTab = { name: 'Faucet', path: '/app/faucet' }
@@ -71,24 +66,9 @@ export function AppNav() {
         </Link>
       </div>
 
-      {/* Right zone: Wallet connection */}
+      {/* Right zone: Wallet dropdown */}
       <div className="flex-1 flex justify-end items-center">
-        {isConnected && address ? (
-          <button
-            onClick={() => disconnect()}
-            title="Click to disconnect wallet"
-            className="font-mono text-xs bg-[var(--bg-elevated)] border border-[var(--border-default)] hover:border-[var(--accent-dim)] px-4 py-2 rounded-[var(--radius-md)] text-[var(--text-primary)] transition-all cursor-pointer hover:shadow-sm"
-          >
-            {truncateAddress(address)}
-          </button>
-        ) : (
-          <button
-            onClick={() => connect({ connector: injected() })}
-            className="font-body text-xs font-medium bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--bg-primary)] px-4 py-2 rounded-[var(--radius-md)] transition-all cursor-pointer"
-          >
-            Connect Wallet
-          </button>
-        )}
+        <WalletDropdown />
       </div>
     </nav>
   )
