@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { useAccount, useReadContract, useChainId } from 'wagmi'
 import { sepolia } from 'wagmi/chains'
 import { parseUnits, formatUnits } from 'viem'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRegistry } from '../hooks/useRegistry'
 import { useWrap } from '../hooks/useWrap'
 import { useDecryptBalance } from '../hooks/useDecryptBalance'
@@ -22,6 +23,7 @@ export default function Wrap() {
   const { address, isConnected } = useAccount()
   const chainId = useChainId()
   const isWrongNetwork = chainId !== sepolia.id
+  const queryClient = useQueryClient()
   const { pairs, isLoading: registryLoading } = useRegistry()
   const [searchParams] = useSearchParams()
 
@@ -70,8 +72,14 @@ export default function Wrap() {
   useEffect(() => {
     if (step === 'execute-confirmed') {
       refetchUnderlying()
+      
+      // Invalidate all react-query caches (which includes Zama SDK's useConfidentialBalance)
+      // We add a slight delay because FHE relayer state updates can sometimes trail by a block
+      setTimeout(() => {
+        queryClient.invalidateQueries()
+      }, 2000)
     }
-  }, [step, refetchUnderlying])
+  }, [step, refetchUnderlying, queryClient])
 
   // Reset wrap hook state when switching pairs, directions, or amounts
   const handlePairChange = (addr: string) => {
