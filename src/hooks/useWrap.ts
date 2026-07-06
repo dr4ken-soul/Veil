@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useWriteContract, usePublicClient, useAccount } from 'wagmi'
+import { useWriteContract, usePublicClient } from 'wagmi'
 import { ERC20_ABI, ERC7984_ABI } from '../lib/contracts'
 import type { WrapperPair } from '../types'
 
@@ -32,7 +32,6 @@ export function useWrap(pair: WrapperPair | null) {
 
   const publicClient = usePublicClient()
   const { writeContractAsync } = useWriteContract()
-  const { address } = useAccount()
 
   /**
    * Executes the wrap (shield) flow.
@@ -61,39 +60,23 @@ export function useWrap(pair: WrapperPair | null) {
       setApproveHash(approveTxHash)
 
       setStep('approve-confirming')
-      await publicClient.waitForTransactionReceipt({ hash: approveTxHash })
+      const approveReceipt = await publicClient.waitForTransactionReceipt({ hash: approveTxHash })
+      if (approveReceipt.status === 'reverted') throw new Error('Approval transaction reverted on-chain.')
       setStep('approve-confirmed')
 
-      // Step 2: Call shield on ERC-7984 wrapper (or mint if it's a Zama Mock token)
+      // Step 2: Call shield on ERC-7984 wrapper
       setStep('execute-signing')
-      
-      let shieldTxHash: `0x${string}`
-      if (pair.isMock && address) {
-        shieldTxHash = await writeContractAsync({
-          address: pair.wrapperAddress,
-          abi: [{
-            name: 'mint',
-            type: 'function',
-            stateMutability: 'nonpayable',
-            inputs: [{ name: 'to', type: 'address' }, { name: 'amount', type: 'uint256' }],
-            outputs: [],
-          }],
-          functionName: 'mint',
-          args: [address, amount],
-        })
-      } else {
-        shieldTxHash = await writeContractAsync({
-          address: pair.wrapperAddress,
-          abi: ERC7984_ABI,
-          functionName: 'shield',
-          args: [amount],
-        })
-      }
-      
+      const shieldTxHash = await writeContractAsync({
+        address: pair.wrapperAddress,
+        abi: ERC7984_ABI,
+        functionName: 'shield',
+        args: [amount],
+      })
       setExecuteHash(shieldTxHash)
 
       setStep('execute-confirming')
-      await publicClient.waitForTransactionReceipt({ hash: shieldTxHash })
+      const shieldReceipt = await publicClient.waitForTransactionReceipt({ hash: shieldTxHash })
+      if (shieldReceipt.status === 'reverted') throw new Error('Shield transaction reverted by the wrapper contract.')
       setStep('execute-confirmed')
     } catch (err) {
       setError(err as Error)
@@ -128,7 +111,8 @@ export function useWrap(pair: WrapperPair | null) {
       setExecuteHash(unshieldTxHash)
 
       setStep('execute-confirming')
-      await publicClient.waitForTransactionReceipt({ hash: unshieldTxHash })
+      const unshieldReceipt = await publicClient.waitForTransactionReceipt({ hash: unshieldTxHash })
+      if (unshieldReceipt.status === 'reverted') throw new Error('Unshield transaction reverted on-chain.')
       setStep('execute-confirmed')
     } catch (err) {
       setError(err as Error)
