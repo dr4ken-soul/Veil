@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useChainId } from 'wagmi'
+import { sepolia } from 'wagmi/chains'
 import { Check, Copy } from 'lucide-react'
 import { useRegistry } from '../hooks/useRegistry'
 import { useFaucet } from '../hooks/useFaucet'
 import { AppNav } from '../components/layout/AppNav'
 import { FadeIn } from '../components/ui/FadeIn'
+import { WrongNetworkBanner } from '../components/ui/WrongNetworkBanner'
 import { SkeletonShimmer } from '../components/ui/SkeletonShimmer'
 import { truncateAddress } from '../lib/utils'
 import type { WrapperPair } from '../types'
@@ -21,6 +23,8 @@ interface FaucetCardProps {
  */
 function FaucetCard({ pair }: FaucetCardProps) {
   const { isConnected } = useAccount()
+  const chainId = useChainId()
+  const isWrongNetwork = chainId !== sepolia.id
   const { claim, isClaiming, error, txHash, cooldownRemaining } = useFaucet(pair.underlyingAddress, pair.decimals)
   const [copiedAddress, setCopiedAddress] = useState(false)
 
@@ -92,7 +96,7 @@ function FaucetCard({ pair }: FaucetCardProps) {
         ) : (
           <button
             onClick={() => claim()}
-            disabled={isClaiming || !isConnected}
+            disabled={isClaiming || !isConnected || isWrongNetwork}
             className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--bg-primary)] text-xs font-semibold uppercase tracking-wider rounded-[var(--radius-md)] border-none outline-none transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-[var(--shadow-sm)]"
           >
             {isClaiming ? 'Claiming...' : `Claim 1000 ${pair.symbol}`}
@@ -150,6 +154,7 @@ export default function Faucet() {
   return (
     <FadeIn className="min-h-screen pt-28 pb-16 bg-[var(--bg-primary)] text-[var(--text-primary)] relative z-10">
       <AppNav />
+      <WrongNetworkBanner />
 
       <main className="max-w-7xl mx-auto px-8 md:px-16">
         {/* Page Header */}

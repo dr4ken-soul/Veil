@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { useAccount, useReadContract } from 'wagmi'
+import { useAccount, useReadContract, useChainId } from 'wagmi'
+import { sepolia } from 'wagmi/chains'
 import { parseUnits, formatUnits } from 'viem'
 import { useRegistry } from '../hooks/useRegistry'
 import { useWrap } from '../hooks/useWrap'
@@ -8,6 +9,7 @@ import { useDecryptBalance } from '../hooks/useDecryptBalance'
 import { ERC20_ABI } from '../lib/contracts'
 import { AppNav } from '../components/layout/AppNav'
 import { FadeIn } from '../components/ui/FadeIn'
+import { WrongNetworkBanner } from '../components/ui/WrongNetworkBanner'
 import { truncateAddress } from '../lib/utils'
 
 /**
@@ -18,6 +20,8 @@ import { truncateAddress } from '../lib/utils'
  */
 export default function Wrap() {
   const { address, isConnected } = useAccount()
+  const chainId = useChainId()
+  const isWrongNetwork = chainId !== sepolia.id
   const { pairs, isLoading: registryLoading } = useRegistry()
   const [searchParams] = useSearchParams()
 
@@ -136,6 +140,7 @@ export default function Wrap() {
 
   const isButtonDisabled =
     !isConnected ||
+    isWrongNetwork ||
     !amount ||
     registryLoading ||
     ['approve-signing', 'approve-confirming', 'execute-signing', 'execute-confirming'].includes(step)
@@ -143,6 +148,7 @@ export default function Wrap() {
   return (
     <FadeIn className="min-h-screen pt-28 pb-16 bg-[var(--bg-primary)] text-[var(--text-primary)] relative z-10">
       <AppNav />
+      <WrongNetworkBanner />
 
       <main className="max-w-xl mx-auto px-6">
         {/* Header */}

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { useAccount } from 'wagmi'
+import { useAccount, useChainId } from 'wagmi'
+import { sepolia } from 'wagmi/chains'
 import { formatUnits } from 'viem'
 import { Copy, Check, ArrowRight, Search } from 'lucide-react'
 import { useRegistry } from '../hooks/useRegistry'
@@ -11,6 +12,7 @@ import { truncateAddress } from '../lib/utils'
 import { SkeletonShimmer } from '../components/ui/SkeletonShimmer'
 import { AppNav } from '../components/layout/AppNav'
 import { FadeIn } from '../components/ui/FadeIn'
+import { WrongNetworkBanner } from '../components/ui/WrongNetworkBanner'
 import type { WrapperPair } from '../types'
 
 interface RegistryCardProps {
@@ -27,6 +29,8 @@ function RegistryCard({ pair }: RegistryCardProps) {
   const { rotateX, rotateY, handleMouseMove, handleMouseLeave } = useCardTilt()
   const { balance, isLoading, error, decrypt } = useDecryptBalance(pair.wrapperAddress)
   const { isConnected } = useAccount()
+  const chainId = useChainId()
+  const isWrongNetwork = chainId !== sepolia.id
   const [copiedErc20, setCopiedErc20] = useState(false)
   const [copiedFhe, setCopiedFhe] = useState(false)
 
@@ -128,7 +132,7 @@ function RegistryCard({ pair }: RegistryCardProps) {
             ) : (
               <button
                 onClick={() => decrypt()}
-                disabled={isLoading || !isConnected}
+                disabled={isLoading || !isConnected || isWrongNetwork}
                 className="w-full py-2 bg-[var(--bg-elevated)] hover:bg-[var(--accent-glow)] text-[var(--text-primary)] hover:text-[var(--accent)] text-xs font-semibold uppercase tracking-wider rounded-[var(--radius-md)] border border-[var(--border-default)] hover:border-[var(--accent-dim)] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? 'Decrypting...' : 'Decrypt Balance'}
@@ -136,7 +140,13 @@ function RegistryCard({ pair }: RegistryCardProps) {
             )}
             {error && (
               <span className="block text-[var(--error)] text-[10px] mt-1 text-center font-body">
-                {error.message || 'Decryption failed'}
+                {isWrongNetwork
+                  ? 'Switch to Sepolia to decrypt'
+                  : error.message?.includes('rejected') || error.message?.includes('denied')
+                  ? 'Signature rejected'
+                  : error.message?.includes('same chain')
+                  ? 'Switch to Sepolia to decrypt'
+                  : 'Decryption failed — try again'}
               </span>
             )}
           </div>
@@ -174,6 +184,7 @@ export default function Registry() {
   return (
     <FadeIn className="min-h-screen pt-28 pb-16 bg-[var(--bg-primary)] text-[var(--text-primary)] relative z-10">
       <AppNav />
+      <WrongNetworkBanner />
 
       <main className="max-w-7xl mx-auto px-8 md:px-16">
         {/* Page Title Header */}
