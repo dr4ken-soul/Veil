@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 
 interface Particle {
   x: number
@@ -12,35 +11,12 @@ interface Particle {
 
 /**
  * ParticleField component that renders an animated particle network on canvas.
- * Includes cursor parallax motion via Framer Motion useMotionValue and useTransform.
  * Uses requestAnimationFrame for performance.
  * @returns React JSX Element.
  */
 export function ParticleField() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const particlesRef = useRef<Particle[]>([])
-
-  // Parallax motion tracking
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
-
-  // Map mouse positions to canvas translation offsets (-10 to 10 on X, -6 to 6 on Y)
-  const transformX = useTransform(mouseX, [0, typeof window !== 'undefined' ? window.innerWidth : 1920], [-10, 10])
-  const transformY = useTransform(mouseY, [0, typeof window !== 'undefined' ? window.innerHeight : 1080], [-6, 6])
-
-  // Apply smooth springs
-  const springX = useSpring(transformX, { stiffness: 80, damping: 20 })
-  const springY = useSpring(transformY, { stiffness: 80, damping: 20 })
-
-  useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      mouseX.set(event.clientX)
-      mouseY.set(event.clientY)
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [mouseX, mouseY])
 
   useEffect(() => {
     const canvas = canvasRef.current

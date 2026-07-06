@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { useAccount } from 'wagmi'
-import { motion, AnimatePresence } from 'framer-motion'
 
 /**
  * Full-screen loader shown while wagmi is reconnecting from persisted state.

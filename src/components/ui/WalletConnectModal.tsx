@@ -25,7 +25,7 @@ export function WalletConnectModal({ isOpen, onClose, redirectTo = '/app/registr
   const navigate = useNavigate()
   const { isConnected } = useAccount()
   const { connect, isPending, isError, error, reset } = useConnect()
-  const stepRef = useRef<ConnectionStep>('idle')
+
 
   // Determine current display step
   let step: ConnectionStep = 'idle'
