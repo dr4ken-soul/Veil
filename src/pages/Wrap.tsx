@@ -12,7 +12,7 @@ import { AppNav } from '../components/layout/AppNav'
 import { FadeIn } from '../components/ui/FadeIn'
 import { WrongNetworkBanner } from '../components/ui/WrongNetworkBanner'
 import { truncateAddress } from '../lib/utils'
-import { RefreshCw } from 'lucide-react'
+import { RefreshCw, AlertCircle } from 'lucide-react'
 
 /**
  * Wrap Page Component.
@@ -162,6 +162,15 @@ export default function Wrap() {
   return (
     <FadeIn className="min-h-screen pt-28 pb-16 bg-[var(--bg-primary)] text-[var(--text-primary)] relative z-10">
       <AppNav />
+      
+      {/* Testnet Notice Banner */}
+      <div className="w-full bg-orange-500/10 border-b border-orange-500/20 px-6 py-3 flex items-center justify-center gap-3 z-10">
+        <AlertCircle className="w-5 h-5 text-orange-400" />
+        <p className="text-sm text-orange-200/90 font-body">
+          <strong className="text-orange-400 font-display tracking-wide">TESTNET NOTICE:</strong> Zama's Sepolia Mock Contracts currently revert during `shield()` execution. Veil is built to strict ERC-7984 standards and is fully ready for mainnet.
+        </p>
+      </div>
+
       <WrongNetworkBanner />
 
       <main className="max-w-xl mx-auto px-6">
