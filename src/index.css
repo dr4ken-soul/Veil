@@ -9,6 +9,11 @@
 }
 
 :root {
+  --spacing:        0.25rem;
+  --font-display:   'Syne', sans-serif;
+  --font-body:      'Outfit', sans-serif;
+  --font-mono:      'JetBrains Mono', monospace;
+
   --bg-primary:     #070810;
   --bg-secondary:   #0c0d1a;
   --bg-surface:     #11121f;
@@ -135,3 +140,47 @@ body.app-interior::before {
   border-top: 2px solid var(--accent);
   padding-top: 2px;
 }
+
+/* Spacing and layout overrides to guarantee spacious, breathable sections */
+section {
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  min-height: auto !important;
+}
+
+/* Specific paddings for sections to match modern editorial design */
+section.py-20 {
+  padding-top: 5rem !important;
+  padding-bottom: 5rem !important;
+}
+
+section.py-24 {
+  padding-top: 8rem !important;
+  padding-bottom: 8rem !important;
+}
+
+section.py-28 {
+  padding-top: 10rem !important;
+  padding-bottom: 10rem !important;
+}
+
+/* Ensure Hero section is full height but does not collapse child elements */
+section.min-h-screen {
+  min-height: 100vh !important;
+  padding-top: 6rem !important;
+  padding-bottom: 6rem !important;
+}
+
+/* Fallback grid gaps to prevent cards from touching */
+.grid {
+  display: grid !important;
+  gap: 1.5rem !important;
+}
+
+@media (min-width: 1024px) {
+  .lg\:gap-12 {
+    gap: 3rem !important;
+  }
+}
+
