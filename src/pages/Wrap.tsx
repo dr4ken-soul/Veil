@@ -12,6 +12,7 @@ import { AppNav } from '../components/layout/AppNav'
 import { FadeIn } from '../components/ui/FadeIn'
 import { WrongNetworkBanner } from '../components/ui/WrongNetworkBanner'
 import { truncateAddress } from '../lib/utils'
+import { RefreshCw } from 'lucide-react'
 
 /**
  * Wrap Page Component.
@@ -107,7 +108,7 @@ export default function Wrap() {
     const parsedAmount = parseUnits(amount, selectedPair.decimals)
 
     if (direction === 'wrap') {
-      if (step === 'idle') {
+      if (step === 'idle' || step === 'execute-confirmed') {
         await wrap(parsedAmount)
       } else if (step === 'approve-confirmed') {
         // Step 2 of wrap
@@ -116,6 +117,11 @@ export default function Wrap() {
     } else {
       await unwrap(parsedAmount)
     }
+  }
+
+  const handleRefresh = () => {
+    refetchUnderlying()
+    queryClient.invalidateQueries()
   }
 
   // Formatting balances
@@ -219,8 +225,15 @@ export default function Wrap() {
           {/* Input Amount */}
           <div className="mb-6">
             <div className="flex justify-between items-baseline mb-2">
-              <label className="font-display text-xs text-[var(--text-secondary)] uppercase tracking-wider">
-                Amount
+              <label className="flex items-center space-x-2 font-display text-xs text-[var(--text-secondary)] uppercase tracking-wider">
+                <span>Amount</span>
+                <button
+                  onClick={handleRefresh}
+                  className="p-1 hover:text-[var(--accent)] text-[var(--text-secondary)] transition-colors bg-transparent border-none cursor-pointer"
+                  title="Refresh Balances"
+                >
+                  <RefreshCw size={12} />
+                </button>
               </label>
               <span className="font-body text-xs text-[var(--text-secondary)]">
                 {direction === 'wrap' ? (
