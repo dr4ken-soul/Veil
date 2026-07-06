@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useState, useCallback } from 'react'
+import { useLocation } from 'react-router-dom'
 import { LandingNav } from '../components/layout/LandingNav'
 import { ParticleField } from '../components/ui/ParticleField'
 import { Hero } from '../components/sections/Hero'
@@ -6,33 +7,58 @@ import { RegistryPreview } from '../components/sections/RegistryPreview'
 import { ProtocolStrip } from '../components/sections/ProtocolStrip'
 import { HowItWorks } from '../components/sections/HowItWorks'
 import { LandingCta } from '../components/sections/LandingCta'
+import { WalletConnectModal } from '../components/ui/WalletConnectModal'
+import { DisconnectToast } from '../components/ui/DisconnectToast'
 
 /**
  * Landing Page Component.
- * Sets background, loads ParticleField, and presents all promotional sections.
- * Cleans up app-interior class on body when active.
+ * Owns the wallet connection modal and disconnect toast state.
+ * Passes onConnectClick down to LandingNav, Hero, and LandingCta.
+ * Reads router location state to detect mid-session disconnect redirects.
  * @returns React JSX Element.
  */
 export default function Landing() {
+  const [showModal, setShowModal] = useState(false)
+  const [showDisconnectToast, setShowDisconnectToast] = useState(false)
+  const location = useLocation()
+
+  // Detect redirect from ProtectedRoute after mid-session disconnect
   useEffect(() => {
-    // Ensure the app-interior class is disabled on the landing page
+    if (location.state?.disconnected) {
+      setShowDisconnectToast(true)
+      // Clear the state so refresh doesn't re-trigger
+      window.history.replaceState({}, '')
+    }
+  }, [location.state])
+
+  // Ensure the app-interior class is disabled on the landing page
+  useEffect(() => {
     document.body.classList.remove('app-interior')
     return () => {
-      // Clean up if navigating away
       document.body.classList.add('app-interior')
     }
   }, [])
+
+  const openModal = useCallback(() => setShowModal(true), [])
+  const closeModal = useCallback(() => setShowModal(false), [])
+  const dismissToast = useCallback(() => setShowDisconnectToast(false), [])
 
   return (
     <div className="relative min-h-screen bg-[var(--bg-primary)] overflow-x-hidden w-full">
       {/* Background Canvas Particles */}
       <ParticleField />
 
+      {/* Disconnect toast — shown when redirected from app after disconnect */}
+      <DisconnectToast visible={showDisconnectToast} onDismiss={dismissToast} />
+
+      {/* Wallet Connect Modal */}
+      <WalletConnectModal isOpen={showModal} onClose={closeModal} />
+
       {/* Navigation Header */}
-      <LandingNav />
+      <LandingNav onConnectClick={openModal} />
 
       {/* Hero Section */}
-      <Hero />
+      <Hero onConnectClick={openModal} />
 
       {/* Live Registry Preview */}
       <RegistryPreview />
@@ -44,7 +70,7 @@ export default function Landing() {
       <HowItWorks />
 
       {/* Final Call to Action */}
-      <LandingCta />
+      <LandingCta onConnectClick={openModal} />
 
       {/* Footer */}
       <footer className="py-12 border-t border-[var(--border-subtle)] text-center relative z-10">

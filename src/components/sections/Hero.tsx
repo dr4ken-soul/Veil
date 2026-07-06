@@ -1,16 +1,28 @@
 import { useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useAccount } from 'wagmi'
 import { useMagneticButton } from '../../hooks/useMagneticButton'
+
+interface HeroProps {
+  /** Called when Launch App is clicked while wallet is not connected. */
+  onConnectClick: () => void
+}
 
 /**
  * Hero section for the Landing page.
  * Features the centered wordmark, tagline, and a magnetic Launch App CTA button.
+ * If wallet is connected, Launch App navigates directly to /app/registry.
+ * If not connected, Launch App opens the WalletConnectModal via onConnectClick.
  * Elements enter via a staggered blur-in sequence.
+ * @param props - onConnectClick handler.
  * @returns React JSX Element.
  */
-export function Hero() {
-  const buttonRef = useRef<HTMLAnchorElement | null>(null)
+export function Hero({ onConnectClick }: HeroProps) {
+  const buttonRef = useRef<HTMLButtonElement | null>(null)
   const { x, y } = useMagneticButton(buttonRef)
+  const { isConnected } = useAccount()
+  const navigate = useNavigate()
 
   const containerVariants = {
     hidden: {},
@@ -30,6 +42,14 @@ export function Hero() {
       y: 0,
       transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const },
     },
+  }
+
+  const handleLaunch = () => {
+    if (isConnected) {
+      navigate('/app/registry')
+    } else {
+      onConnectClick()
+    }
   }
 
   return (
@@ -57,14 +77,14 @@ export function Hero() {
 
       {/* Magnetic CTA Button */}
       <motion.div variants={childVariants} className="flex justify-center items-center">
-        <motion.a
+        <motion.button
           ref={buttonRef}
           style={{ x, y }}
-          href="/app/registry"
-          className="inline-block font-body font-semibold text-sm tracking-wider uppercase bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--bg-primary)] px-8 py-4 rounded-[var(--radius-md)] transition-colors no-underline cursor-pointer shadow-[var(--shadow-md)]"
+          onClick={handleLaunch}
+          className="inline-block font-body font-semibold text-sm tracking-wider uppercase bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--bg-primary)] px-8 py-4 rounded-[var(--radius-md)] transition-colors cursor-pointer shadow-[var(--shadow-md)] border-none outline-none"
         >
           Launch app
-        </motion.a>
+        </motion.button>
       </motion.div>
     </motion.section>
   )

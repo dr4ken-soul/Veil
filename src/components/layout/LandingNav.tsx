@@ -1,18 +1,23 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useAccount, useConnect } from 'wagmi'
-import { injected } from 'wagmi/connectors'
+import { useAccount } from 'wagmi'
+
+interface LandingNavProps {
+  /** Called when the user clicks Connect Wallet — opens the connection modal. */
+  onConnectClick: () => void
+}
 
 /**
  * Landing page navigation bar.
  * Features a dark glass styling with a central vertical hairline rule.
  * The bottom border opacity is updated on window scroll past 80px.
+ * Connect Wallet delegates to the parent-controlled modal via onConnectClick.
+ * @param props - onConnectClick handler.
  * @returns React JSX Element.
  */
-export function LandingNav() {
+export function LandingNav({ onConnectClick }: LandingNavProps) {
   const [isScrolled, setIsScrolled] = useState(false)
   const { isConnected } = useAccount()
-  const { connect } = useConnect()
 
   useEffect(() => {
     /**
@@ -44,19 +49,19 @@ export function LandingNav() {
       {/* Central vertical rule */}
       <div className="hidden md:block w-[1px] h-6 bg-[var(--border-default)]" />
 
-      {/* Right zone: Action link */}
+      {/* Right zone: Action */}
       <div className="flex-1 flex justify-end items-center">
         {isConnected ? (
           <Link
             to="/app/registry"
-            className="font-body text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors relative group"
+            className="font-body text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors relative group no-underline"
           >
             Launch App
             <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-[var(--accent)] transition-all duration-300 group-hover:w-full" />
           </Link>
         ) : (
           <button
-            onClick={() => connect({ connector: injected() })}
+            onClick={onConnectClick}
             className="font-body text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-hover)] cursor-pointer transition-colors relative group bg-transparent border-none outline-none"
           >
             Connect Wallet

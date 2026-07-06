@@ -1,16 +1,35 @@
 import { useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useAccount } from 'wagmi'
 import { useMagneticButton } from '../../hooks/useMagneticButton'
+
+interface LandingCtaProps {
+  /** Called when Launch App is clicked while wallet is not connected. */
+  onConnectClick: () => void
+}
 
 /**
  * LandingCta section for the Landing page.
  * Displays a full-width call-to-action panel with liquid-glass-strong styling
  * and a magnetic CTA button to route to the app interior.
+ * If wallet is connected, navigates directly. Otherwise opens the connect modal.
+ * @param props - onConnectClick handler.
  * @returns React JSX Element.
  */
-export function LandingCta() {
-  const buttonRef = useRef<HTMLAnchorElement | null>(null)
+export function LandingCta({ onConnectClick }: LandingCtaProps) {
+  const buttonRef = useRef<HTMLButtonElement | null>(null)
   const { x, y } = useMagneticButton(buttonRef)
+  const { isConnected } = useAccount()
+  const navigate = useNavigate()
+
+  const handleLaunch = () => {
+    if (isConnected) {
+      navigate('/app/registry')
+    } else {
+      onConnectClick()
+    }
+  }
 
   return (
     <section className="py-24 w-full z-10 relative">
@@ -28,14 +47,14 @@ export function LandingCta() {
           </p>
 
           <motion.div className="flex justify-center items-center z-10 relative">
-            <motion.a
+            <motion.button
               ref={buttonRef}
               style={{ x, y }}
-              href="/app/registry"
-              className="inline-block font-body font-semibold text-xs tracking-wider uppercase bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--bg-primary)] px-8 py-4 rounded-[var(--radius-md)] transition-colors no-underline cursor-pointer shadow-[var(--shadow-md)]"
+              onClick={handleLaunch}
+              className="inline-block font-body font-semibold text-xs tracking-wider uppercase bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--bg-primary)] px-8 py-4 rounded-[var(--radius-md)] transition-colors cursor-pointer shadow-[var(--shadow-md)] border-none outline-none"
             >
               Launch app
-            </motion.a>
+            </motion.button>
           </motion.div>
         </div>
       </div>
