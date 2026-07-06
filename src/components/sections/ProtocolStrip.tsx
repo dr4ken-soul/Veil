@@ -33,12 +33,12 @@ export function ProtocolStrip() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-100px' }}
-        className="max-w-7xl mx-auto px-8 md:px-16 grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-0"
+        className="max-w-7xl mx-auto px-8 md:px-16 grid grid-cols-1 md:grid-cols-3 gap-12"
       >
         {/* Column 1: FHE */}
         <motion.div
           variants={childVariants}
-          className="flex flex-col items-center md:items-start text-center md:text-left px-6 md:border-r border-[var(--border-subtle)] last:border-0"
+          className="flex flex-col items-start text-left px-6 md:border-r border-[var(--border-subtle)]"
         >
           <h3 className="font-display font-semibold text-lg md:text-xl text-[var(--accent)] mb-4">
             FHE encryption
@@ -51,7 +51,7 @@ export function ProtocolStrip() {
         {/* Column 2: ERC-7984 */}
         <motion.div
           variants={childVariants}
-          className="flex flex-col items-center md:items-start text-center md:text-left px-6 md:border-r border-[var(--border-subtle)] last:border-0"
+          className="flex flex-col items-start text-left px-6 md:border-r border-[var(--border-subtle)]"
         >
           <h3 className="font-display font-semibold text-lg md:text-xl text-[var(--text-primary)] mb-4">
             ERC-7984 standard
@@ -64,7 +64,7 @@ export function ProtocolStrip() {
         {/* Column 3: EIP-712 */}
         <motion.div
           variants={childVariants}
-          className="flex flex-col items-center md:items-start text-center md:text-left px-6 last:border-0"
+          className="flex flex-col items-start text-left px-6"
         >
           <h3 className="font-display font-semibold text-lg md:text-xl text-[var(--accent)] mb-4">
             EIP-712 decryption

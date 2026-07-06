@@ -50,7 +50,7 @@ export function Hero() {
       {/* Tagline */}
       <motion.p
         variants={childVariants}
-        className="font-body font-light text-lg md:text-2xl text-[var(--text-secondary)] tracking-wide mb-10 max-w-xl"
+        className="font-body font-light text-lg md:text-2xl text-[var(--text-secondary)] tracking-wide mb-10 max-w-xl mx-auto text-center"
       >
         Wrap anything. Reveal nothing.
       </motion.p>

@@ -45,30 +45,30 @@ export function HowItWorks() {
   ]
 
   return (
-    <section className="py-28 max-w-7xl mx-auto px-8 md:px-16 relative z-10">
-      <div className="text-center mb-16">
-        <h2 className="font-display font-bold text-3xl md:text-5xl text-[var(--text-primary)] mb-4">
-          How It Works
-        </h2>
-        <p className="font-body text-[var(--text-secondary)] max-w-lg mx-auto">
-          Veil simplifies the interactions with on-chain Fully Homomorphic Encryption.
-        </p>
-      </div>
+    <section className="py-28 w-full relative z-10">
+      <div className="max-w-7xl mx-auto px-8 md:px-16">
+        <div className="text-center mb-16">
+          <h2 className="font-display font-bold text-3xl md:text-5xl text-[var(--text-primary)] mb-4">
+            How It Works
+          </h2>
+          <p className="font-body text-[var(--text-secondary)] max-w-lg mx-auto text-center">
+            Veil simplifies the interactions with on-chain Fully Homomorphic Encryption.
+          </p>
+        </div>
 
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12"
-      >
-        {steps.map((step, idx) => (
-          <motion.div
-            key={idx}
-            variants={childVariants}
-            className="p-8 rounded-[var(--radius-lg)] bg-[var(--bg-surface)] border border-[var(--border-default)] flex flex-col justify-between"
-          >
-            <div>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-100px' }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12"
+        >
+          {steps.map((step, idx) => (
+            <motion.div
+              key={idx}
+              variants={childVariants}
+              className="p-8 rounded-[var(--radius-lg)] bg-[var(--bg-surface)] border border-[var(--border-default)] flex flex-col"
+            >
               <span className="font-mono font-medium text-2xl text-[var(--accent)] block mb-6">
                 {step.num}
               </span>
@@ -78,10 +78,10 @@ export function HowItWorks() {
               <p className="font-body text-sm text-[var(--text-secondary)] leading-relaxed">
                 {step.desc}
               </p>
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
     </section>
   )
 }

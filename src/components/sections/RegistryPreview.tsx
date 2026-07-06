@@ -122,50 +122,52 @@ export function RegistryPreview() {
   const previewPairs = pairs.slice(0, 6)
 
   return (
-    <section className="py-24 px-8 md:px-16 max-w-7xl mx-auto z-10 relative">
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-        <div>
-          <h2 className="font-display font-bold text-3xl md:text-5xl text-[var(--text-primary)] mb-4">
-            Wrapper Registry
-          </h2>
-          <p className="font-body text-[var(--text-secondary)] max-w-xl">
-            Surfacing on-chain confidential assets registered on Sepolia. Convert standard ERC-20 tokens to FHE shielded tokens.
-          </p>
+    <section className="py-24 z-10 relative w-full">
+      <div className="max-w-7xl mx-auto px-8 md:px-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+          <div>
+            <h2 className="font-display font-bold text-3xl md:text-5xl text-[var(--text-primary)] mb-4">
+              Wrapper Registry
+            </h2>
+            <p className="font-body text-[var(--text-secondary)] max-w-2xl mr-8">
+              Surfacing on-chain confidential assets registered on Sepolia. Convert standard ERC-20 tokens to FHE shielded tokens.
+            </p>
+          </div>
+          <Link
+            to="/app/registry"
+            className="inline-flex items-center space-x-2 text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors no-underline font-body text-sm font-semibold mt-4 md:mt-0 shrink-0"
+          >
+            <span>View all pairs</span>
+            <ArrowRight size={14} />
+          </Link>
         </div>
-        <Link
-          to="/app/registry"
-          className="inline-flex items-center space-x-2 text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors no-underline font-body text-sm font-semibold mt-4 md:mt-0"
-        >
-          <span>View all pairs</span>
-          <ArrowRight size={14} />
-        </Link>
-      </div>
 
-      {error ? (
-        <div className="text-center py-12 border border-[var(--border-default)] rounded-[var(--radius-lg)] bg-[var(--bg-surface)]">
-          <p className="text-[var(--error)] font-body">
-            Could not read registry. Check your connection and try again.
-          </p>
-        </div>
-      ) : isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <SkeletonShimmer key={idx} className="h-56" />
-          ))}
-        </div>
-      ) : previewPairs.length === 0 ? (
-        <div className="text-center py-12 border border-[var(--border-default)] rounded-[var(--radius-lg)] bg-[var(--bg-surface)]">
-          <p className="text-[var(--text-secondary)] font-body">
-            No pairs found. The registry may still be loading.
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {previewPairs.map((pair) => (
-            <PreviewCard key={pair.wrapperAddress} pair={pair} />
-          ))}
-        </div>
-      )}
+        {error ? (
+          <div className="text-center py-12 border border-[var(--border-default)] rounded-[var(--radius-lg)] bg-[var(--bg-surface)]">
+            <p className="text-[var(--error)] font-body">
+              Could not read registry. Check your connection and try again.
+            </p>
+          </div>
+        ) : isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, idx) => (
+              <SkeletonShimmer key={idx} className="h-56" />
+            ))}
+          </div>
+        ) : previewPairs.length === 0 ? (
+          <div className="text-center py-12 border border-[var(--border-default)] rounded-[var(--radius-lg)] bg-[var(--bg-surface)]">
+            <p className="text-[var(--text-secondary)] font-body">
+              No pairs found. The registry may still be loading.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {previewPairs.map((pair) => (
+              <PreviewCard key={pair.wrapperAddress} pair={pair} />
+            ))}
+          </div>
+        )}
+      </div>
     </section>
   )
 }
