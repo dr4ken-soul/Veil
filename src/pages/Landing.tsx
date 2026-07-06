@@ -6,7 +6,6 @@ import { RegistryPreview } from '../components/sections/RegistryPreview'
 import { ProtocolStrip } from '../components/sections/ProtocolStrip'
 import { HowItWorks } from '../components/sections/HowItWorks'
 import { LandingCta } from '../components/sections/LandingCta'
-import { FadeIn } from '../components/ui/FadeIn'
 
 /**
  * Landing Page Component.
@@ -25,7 +24,7 @@ export default function Landing() {
   }, [])
 
   return (
-    <FadeIn className="relative min-h-screen bg-[var(--bg-primary)] overflow-x-hidden">
+    <div className="relative min-h-screen bg-[var(--bg-primary)] overflow-x-hidden w-full">
       {/* Background Canvas Particles */}
       <ParticleField />
 
@@ -53,6 +52,6 @@ export default function Landing() {
           &copy; {new Date().getFullYear()} Veil. Built for the Zama Developer Program. All rights reserved.
         </p>
       </footer>
-    </FadeIn>
+    </div>
   )
 }

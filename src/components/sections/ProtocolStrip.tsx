@@ -27,53 +27,55 @@ export function ProtocolStrip() {
   }
 
   return (
-    <section className="py-20 border-y border-[var(--border-subtle)] bg-[var(--bg-secondary)] relative z-10">
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
-        className="max-w-7xl mx-auto px-8 md:px-16 grid grid-cols-1 md:grid-cols-3 gap-12"
-      >
-        {/* Column 1: FHE */}
+    <section className="py-20 border-y border-[var(--border-subtle)] bg-[var(--bg-secondary)] relative z-10 w-full">
+      <div className="max-w-7xl mx-auto px-8 md:px-16">
         <motion.div
-          variants={childVariants}
-          className="flex flex-col items-start text-left px-6 md:border-r border-[var(--border-subtle)]"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-100px' }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-12"
         >
-          <h3 className="font-display font-semibold text-lg md:text-xl text-[var(--accent)] mb-4">
-            FHE encryption
-          </h3>
-          <p className="font-body font-normal text-sm md:text-base text-[var(--text-secondary)] leading-relaxed max-w-sm">
-            Your balance becomes an encrypted integer only you can decrypt.
-          </p>
-        </motion.div>
+          {/* Column 1: FHE */}
+          <motion.div
+            variants={childVariants}
+            className="flex flex-col items-start text-left px-6 md:border-r border-[var(--border-subtle)]"
+          >
+            <h3 className="font-display font-semibold text-lg md:text-xl text-[var(--accent)] mb-4">
+              FHE encryption
+            </h3>
+            <p className="font-body font-normal text-sm md:text-base text-[var(--text-secondary)] leading-relaxed max-w-sm">
+              Your balance becomes an encrypted integer only you can decrypt.
+            </p>
+          </motion.div>
 
-        {/* Column 2: ERC-7984 */}
-        <motion.div
-          variants={childVariants}
-          className="flex flex-col items-start text-left px-6 md:border-r border-[var(--border-subtle)]"
-        >
-          <h3 className="font-display font-semibold text-lg md:text-xl text-[var(--text-primary)] mb-4">
-            ERC-7984 standard
-          </h3>
-          <p className="font-body font-normal text-sm md:text-base text-[var(--text-secondary)] leading-relaxed max-w-sm">
-            Every wrapper pair is registered on-chain and readable by anyone.
-          </p>
-        </motion.div>
+          {/* Column 2: ERC-7984 */}
+          <motion.div
+            variants={childVariants}
+            className="flex flex-col items-start text-left px-6 md:border-r border-[var(--border-subtle)]"
+          >
+            <h3 className="font-display font-semibold text-lg md:text-xl text-[var(--text-primary)] mb-4">
+              ERC-7984 standard
+            </h3>
+            <p className="font-body font-normal text-sm md:text-base text-[var(--text-secondary)] leading-relaxed max-w-sm">
+              Every wrapper pair is registered on-chain and readable by anyone.
+            </p>
+          </motion.div>
 
-        {/* Column 3: EIP-712 */}
-        <motion.div
-          variants={childVariants}
-          className="flex flex-col items-start text-left px-6"
-        >
-          <h3 className="font-display font-semibold text-lg md:text-xl text-[var(--accent)] mb-4">
-            EIP-712 decryption
-          </h3>
-          <p className="font-body font-normal text-sm md:text-base text-[var(--text-secondary)] leading-relaxed max-w-sm">
-            A signed permit unlocks your balance client-side without touching the chain.
-          </p>
+          {/* Column 3: EIP-712 */}
+          <motion.div
+            variants={childVariants}
+            className="flex flex-col items-start text-left px-6"
+          >
+            <h3 className="font-display font-semibold text-lg md:text-xl text-[var(--accent)] mb-4">
+              EIP-712 decryption
+            </h3>
+            <p className="font-body font-normal text-sm md:text-base text-[var(--text-secondary)] leading-relaxed max-w-sm">
+              A signed permit unlocks your balance client-side without touching the chain.
+            </p>
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   )
 }

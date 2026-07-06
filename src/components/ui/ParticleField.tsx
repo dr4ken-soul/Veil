@@ -141,14 +141,8 @@ export function ParticleField() {
   }, [])
 
   return (
-    <motion.div
-      style={{
-        x: springX,
-        y: springY,
-      }}
-      className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
-    >
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
       <canvas ref={canvasRef} className="block w-full h-full" />
-    </motion.div>
+    </div>
   )
 }
