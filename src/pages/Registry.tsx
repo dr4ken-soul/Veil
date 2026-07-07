@@ -27,7 +27,7 @@ interface RegistryCardProps {
  */
 function RegistryCard({ pair }: RegistryCardProps) {
   const { rotateX, rotateY, handleMouseMove, handleMouseLeave } = useCardTilt()
-  const { balance, isLoading, error, decrypt } = useDecryptBalance(pair.wrapperAddress)
+  const { balance, isLoading, error, decrypt, hasPermit } = useDecryptBalance(pair.wrapperAddress)
   const { isConnected } = useAccount()
   const chainId = useChainId()
   const isWrongNetwork = chainId !== sepolia.id
@@ -120,7 +120,7 @@ function RegistryCard({ pair }: RegistryCardProps) {
 
           {/* Inline Decryption Section */}
           <div className="mt-4 pt-4 border-t border-[var(--border-subtle)]">
-            {balance !== null ? (
+            {hasPermit && balance !== null ? (
               <div className="text-center py-2 bg-[var(--accent-glow)] rounded-[var(--radius-md)] border border-[var(--accent-dim)]">
                 <span className="font-mono text-[10px] text-[var(--text-secondary)] block uppercase tracking-wider mb-0.5">
                   Decrypted Balance

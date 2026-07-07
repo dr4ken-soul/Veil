@@ -46,6 +46,7 @@ export default function Wrap() {
     isLoading: isDecrypting,
     decrypt: decryptWrappedBalance,
     error: decryptError,
+    hasPermit,
   } = useDecryptBalance(selectedPair ? selectedPair.wrapperAddress : null)
 
   // Read underlying ERC-20 balance
@@ -250,7 +251,7 @@ export default function Wrap() {
                 ) : (
                   <>
                     Wrapped:{' '}
-                    {displayWrappedBalance !== null ? (
+                    {hasPermit && displayWrappedBalance !== null ? (
                       `${displayWrappedBalance} ${selectedPair?.symbol}`
                     ) : (
                       <button
